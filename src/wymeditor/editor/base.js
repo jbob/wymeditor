@@ -131,7 +131,8 @@ WYMeditor.editor.prototype.init = function () {
     for (i = 0; i < aClasses.length; i += 1) {
         oClass = aClasses[i];
         sClass = '';
-        if (oClass.name && oClass.title) {
+        //if (oClass.name && oClass.title) {
+        if (oClass.title) {
             sClass = this._options.classesItemHtml;
         }
         sClass = h.replaceAll(sClass, WYMeditor.CLASS_NAME, oClass.name);
@@ -229,7 +230,8 @@ WYMeditor.editor.prototype.bindEvents = function () {
 
         if (oClass) {
             jqexpr = oClass.expr;
-            wym.toggleClass(sName, jqexpr);
+            //wym.toggleClass(sName, jqexpr);
+            wym.setClass(sName, jqexpr);
         }
         wym._iframe.contentWindow.focus(); //See #154
         return false;
@@ -578,6 +580,29 @@ WYMeditor.editor.prototype.toggleClass = function (sClass, jqexpr) {
     }
     container = jQuery(container).parentsOrSelf(jqexpr);
     jQuery(container).toggleClass(sClass);
+
+    if (!jQuery(container).attr(WYMeditor.CLASS)) {
+        jQuery(container).removeAttr(this._class);
+    }
+};
+
+
+/**
+    WYMeditor.editor.setClass
+    =========================
+
+    Set a class on the selected element or one of its parents, removes other classes
+*/
+WYMeditor.editor.prototype.setClass = function (sClass, jqexpr) {
+    var container = null;
+    if (this._selected_image) {
+        container = this._selected_image;
+    } else {
+        container = jQuery(this.selected());
+    }
+    container = jQuery(container).parentsOrSelf(jqexpr);
+    jQuery(container).removeClass();
+    jQuery(container).addClass(sClass);
 
     if (!jQuery(container).attr(WYMeditor.CLASS)) {
         jQuery(container).removeAttr(this._class);
